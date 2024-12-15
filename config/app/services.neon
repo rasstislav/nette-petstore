@@ -1,0 +1,55 @@
+services:
+	- App\Core\RouterFactory::createRouter
+	- App\Repository\Pet\StoragePetRepository(
+		App\Storage\FileStorage(
+			%appDir%/../data/pets.xml,
+			App\Model\Pet\Pet,
+			App\Model\Pet\PetCollection,
+			App\Codec\XmlDataCodec()
+		)
+	)
+
+	# Serializer
+	symfony.serializer.serializer:
+		create: Symfony\Component\Serializer\Serializer
+		arguments:
+			normalizers:
+				- @symfony.serializer.propertyNormalizer
+				- Symfony\Component\Serializer\Normalizer\ArrayDenormalizer()
+			encoders:
+				- Symfony\Component\Serializer\Encoder\JsonEncoder()
+				- Symfony\Component\Serializer\Encoder\XmlEncoder()
+
+	symfony.serializer.propertyNormalizer:
+		create: Symfony\Component\Serializer\Normalizer\PropertyNormalizer(
+			classMetadataFactory: @symfony.serializer.classMetadataFactory,
+			nameConverter: Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter(@symfony.serializer.classMetadataFactory),
+			propertyTypeExtractor: Symfony\Component\PropertyInfo\PropertyInfoExtractor(
+				typeExtractors: [
+					Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor()
+					Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor()
+				]
+			)
+		)
+		autowired: false
+
+	symfony.serializer.classMetadataFactory:
+		create: Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory(@symfony.serializer.attributeLoader)
+		autowired: false
+
+	symfony.serializer.attributeLoader:
+		create: Symfony\Component\Serializer\Mapping\Loader\AttributeLoader()
+		autowired: false
+
+	symfony.serializer.annotationReader:
+		create: Doctrine\Common\Annotations\AnnotationReader
+		autowired: false
+		setup:
+			- addGlobalIgnoredName(phpcsSuppress)
+
+
+search:
+	-	in: %appDir%
+		classes:
+			- *Factory
+			- *Facade

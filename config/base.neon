@@ -1,0 +1,11 @@
+includes:
+	# Application
+	- app/common.neon
+	- app/services.neon
+
+	# Extensions
+	- ext/contributte.neon
+	- ext/apitte.neon
+
+php:
+	date.timezone: Europe/Bratislava

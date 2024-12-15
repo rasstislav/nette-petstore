@@ -1,0 +1,36 @@
+extensions:
+	middleware: Contributte\Middlewares\DI\MiddlewaresExtension
+	resource: Contributte\DI\Extension\ResourceExtension
+	monolog: Contributte\Monolog\DI\MonologExtension
+
+middleware:
+	debug: %debugMode%
+
+resource:
+	resources:
+		App\Api\Controller\:
+			paths: [%appDir%/Api/Controller]
+
+monolog:
+	holder:
+		enabled: true
+	hook:
+		toTracy: false
+	channel:
+		default:
+			handlers:
+				- Monolog\Handler\RotatingFileHandler(%appDir%/../log/syslog.log, 30, Monolog\Logger::WARNING)
+			processors:
+				- Monolog\Processor\WebProcessor()
+				- Monolog\Processor\IntrospectionProcessor()
+				- Monolog\Processor\MemoryPeakUsageProcessor()
+				- Monolog\Processor\ProcessIdProcessor()
+
+services:
+	middleware.tryCatch:
+		create: Contributte\Middlewares\TryCatchMiddleware
+		tags: [middleware: [priority: 1]]
+		setup:
+			- setDebugMode(%debugMode%)
+			- setCatchExceptions(%productionMode%)
+			- setLogger(@Psr\Log\LoggerInterface, Psr\Log\LogLevel::ERROR)

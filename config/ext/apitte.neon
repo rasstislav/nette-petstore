@@ -1,0 +1,66 @@
+extensions:
+	api: Apitte\Core\DI\ApiExtension
+
+parameters:
+	api:
+		transformers: [
+			json: @api.negotiation.transformer.json
+			# csv: @api.negotiation.transformer.csv
+			xml: @app.api.negotiation.transformer.xml
+		]
+		accepts: [
+			'application/json': 'json',
+			# 'application/csv': 'csv',
+			# 'text/csv': 'csv',
+			'application/xml': 'xml',
+		]
+		contentTypes: [
+			'application/json': 'json',
+			# 'application/csv': 'csv',
+			# 'text/csv': 'csv',
+			'application/xml': 'xml',
+		]
+
+api:
+	debug: %debugMode%
+	# catchException: false
+	plugins:
+		Apitte\Core\DI\Plugin\CoreSchemaPlugin:
+		Apitte\Core\DI\Plugin\CoreServicesPlugin:
+		Apitte\Core\DI\Plugin\CoreDecoratorPlugin:
+		App\Api\Plugin\CoreMappingPlugin:
+			request:
+				validator: @api.validator.symfony
+				serializer: @symfony.serializer.serializer
+				supportedContentTypes: %api.contentTypes%
+		Apitte\Negotiation\DI\NegotiationPlugin:
+		Apitte\Debug\DI\DebugPlugin:
+		Apitte\Middlewares\DI\MiddlewaresPlugin:
+			tracy: false
+			autobasepath: true
+		Apitte\OpenApi\DI\OpenApiPlugin:
+			definition:
+				info:
+					title: Swagger Petstore - OpenAPI 3.0
+					description: This is a sample Pet Store Server based on the OpenAPI 3.0 specification.
+			swaggerUi:
+				panel: %debugMode%
+
+services:
+	api.core.dispatcher: App\Api\Dispatcher\DecoratedDispatcher
+	app.api.negotiation.transformer.xml:
+		create: App\Api\Negotiation\Transformer\XmlTransformer
+		tags: [apitte.negotiator.transformer: [suffix: xml, fallback: true]]
+	app.api.negotiation.negotiator.accept:
+		create: App\Api\Negotiation\AcceptNegotiator
+		arguments: [
+			%api.transformers%
+			%api.accepts%
+		]
+		tags: [apitte.negotiation.negotiator: [priority: 250]]
+	api.validator.symfony:
+		create: Apitte\Core\Mapping\Validator\SymfonyValidator
+		setup:
+			- setGroups(['api:input'])
+	decorator.error.exception:
+		class: App\Api\Exception\DebugExceptionDecorator
