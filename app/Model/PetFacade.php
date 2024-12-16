@@ -102,6 +102,16 @@ final class PetFacade
 	/**
 	 * @throws ApiHttpError When error occurs
 	 */
+	public function uploadImage(int $id, string $imageContent): Entity
+	{
+		$data = $this->getData(fn() => $this->client->uploadImage($id, $imageContent));
+
+		return $this->serializer->denormalize($data, Entity::class);
+	}
+
+	/**
+	 * @throws ApiHttpError When error occurs
+	 */
 	private function getData(callable $callback): array
 	{
 		$response = $callback();

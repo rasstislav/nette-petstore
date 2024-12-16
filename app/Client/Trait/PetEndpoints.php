@@ -46,6 +46,11 @@ trait PetEndpoints
 		return $this->delete("pet/$id");
 	}
 
+	public function uploadImage(int $id, string $imageContent): array
+	{
+		return $this->post("pet/$id/uploadImage", $imageContent);
+	}
+
 	public function replacePet(string $body): array
 	{
 		return $this->put('pet', $body);

@@ -6,6 +6,7 @@ namespace App\Api\Controller\V1;
 
 use Apitte\Core\Annotation\Controller as Apitte;
 use Apitte\Core\Exception\Api\ClientErrorException;
+use Apitte\Core\Exception\Api\ValidationException;
 use Apitte\Core\Http\ApiRequest;
 use Apitte\Core\Http\ApiResponse;
 use Apitte\Core\Schema\EndpointParameter;
@@ -14,6 +15,7 @@ use App\Api\Negotiation\Http\MappingEntity;
 use App\Model\Enum\Pet\PetStatusEnum;
 use App\Model\Pet\Pet as Entity;
 use App\Repository\Pet\PetRepository as Repository;
+use App\Utils\FileInfo;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -166,7 +168,60 @@ class PetController extends BaseV1Controller
 			->withStatus(ApiResponse::S204_NO_CONTENT);
 	}
 
-	// TODO: uploadImage
+	#[Apitte\OpenApi('
+		summary: Uploads an image
+		requestBody:
+			content:
+				application/octet-stream:
+					schema:
+						type: string
+						format: binary
+	')]
+	#[Apitte\Path('/{petId}/uploadImage')]
+	#[Apitte\Method('POST')]
+	#[Apitte\RequestParameter(
+		name: 'petId',
+		type: EndpointParameter::TYPE_INTEGER,
+		description: 'ID of pet to update',
+	)]
+	// TODO:
+	#[Apitte\RequestParameter(
+		name: 'additionalMetadata',
+		type: EndpointParameter::TYPE_STRING,
+		in: EndpointParameter::IN_QUERY,
+		required: false,
+		description: 'Additional Metadata',
+	)]
+	#[Apitte\RequestBody(required: true)]
+	#[Apitte\Response(code: ApiResponse::S200_OK.'', description: 'Successful operation')]
+	#[Apitte\Response(code: ApiResponse::S400_BAD_REQUEST.'', description: 'Invalid image type')]
+	#[Apitte\Response(code: ApiResponse::S404_NOT_FOUND.'', description: 'Pet not found')]
+	#[Apitte\Response(code: ApiResponse::S422_UNPROCESSABLE_ENTITY.'', description: 'Invalid input')]
+	public function uploadImage(ApiRequest $request, ApiResponse $response): Entity
+	{
+		if (!$imageContent = $request->getContents()) {
+			throw ValidationException::create()
+				->withFields(['file' => ['No image uploaded']]);
+		}
+
+		if (!$entity = $this->repository->findOneBy('id', $request->getParameter('petId'))) {
+			throw new EntityNotFoundException('Pet not found');
+		}
+
+		if (!$fileExtension = FileInfo::getSuggestedExtensionFromString($imageContent)) {
+			throw ClientErrorException::create()
+				->withMessage('Invalid image type')
+				->withCode(ApiResponse::S400_BAD_REQUEST);
+		}
+
+		$entity->image = base64_encode($imageContent);
+
+		if (!$entity = $this->repository->replace($entity)) {
+			throw new EntityNotFoundException('Pet not found');
+		}
+
+		return $entity;
+	}
 
 	#[Apitte\OpenApi('
 		summary: Update an existing pet

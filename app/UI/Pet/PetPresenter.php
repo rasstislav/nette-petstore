@@ -117,6 +117,18 @@ final class PetPresenter extends Nette\Application\UI\Presenter
 				->setRequired();
 		}
 
+		if ($this->getParameter('id')) {
+			$form->addHidden('image')
+				->setNullable();
+		}
+
+		$form->addCheckbox('uploadImage', $this->getParameter('id') ? 'Aktualizovať obrázok' : 'Pridať obrázok')
+			->setOmitted();
+
+		$form->addUpload('newImage', 'Obrázok:')
+			->addRule(Form::Image, 'Obrázok musí být JPEG, PNG, GIF, WebP alebo AVIF.')
+			->setOmitted();
+
 		$form->addSubmit('send', 'Uložit');
 
 		$form->onSuccess[] = $this->petFormSucceeded(...);
@@ -124,11 +136,25 @@ final class PetPresenter extends Nette\Application\UI\Presenter
 		return $form;
 	}
 
-	private function petFormSucceeded(Pet $pet): void
+	private function petFormSucceeded(Form $form, Pet $pet): void
 	{
 		if (!$pet->category->name) {
 			$pet->category = null;
 		}
+
+		if ($uploadImage = $form['uploadImage']->getValue()) {
+			$pet->image = null;
+		}
+
+		$uploadImageCallback = function(int $petId) use ($form, $uploadImage) {
+			if ($uploadImage && ($file = $form['newImage']->getValue())->hasFile()) {
+				try {
+					$this->petFacade->uploadImage($petId, $file->getContents());
+				} catch (ApiHttpError) {
+					$this->flashMessage('Obrázok sa nepodarilo nahrať.', 'danger');
+				}
+			}
+		};
 
 		if ($id = (int) $this->getParameter('id')) {
 			$pet->id = $id;
@@ -137,6 +163,8 @@ final class PetPresenter extends Nette\Application\UI\Presenter
 				$pet = $this->petFacade->updatePet($pet);
 
 				$this->flashMessage('Zvieratko úspešne upravené.', 'success');
+
+				$uploadImageCallback($pet->id);
 
 				$this->redirect(':show', [$pet->id]);
 			} catch (ApiHttpError) {
@@ -151,6 +179,8 @@ final class PetPresenter extends Nette\Application\UI\Presenter
 				$pet = $this->petFacade->createPet($pet);
 
 				$this->flashMessage('Zvieratko úspešne vytvorené.', 'success');
+
+				$uploadImageCallback($pet->id);
 
 				$this->redirect(':show', [$pet->id]);
 			} catch (ApiHttpError) {

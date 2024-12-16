@@ -29,11 +29,13 @@
 					<tr>
 						<th>#</th>
 						<th>Meno</th>
+						<th>Obrázok</th>
 						<th></th>
 					</tr>
 						<tr n:foreach="$availablePets as $pet">
 							<td>{$pet->id}</td>
 							<td>{$pet->name}</td>
+							<td>{$pet->image ? Áno : Nie}</td>
 							<td>
 								<a n:href=":show $pet->id" class="btn btn-sm btn-outline-info">Zobraziť</a>
 								<a n:href=":edit $pet->id" class="btn btn-sm btn-outline-success">Upraviť</a>
@@ -50,11 +52,13 @@
 					<tr>
 						<th>#</th>
 						<th>Meno</th>
+						<th>Obrázok</th>
 						<th></th>
 					</tr>
 						<tr n:foreach="$pendingPets as $pet">
 							<td>{$pet->id}</td>
 							<td>{$pet->name}</td>
+							<td>{$pet->image ? Áno : Nie}</td>
 							<td>
 								<a n:href=":show $pet->id" class="btn btn-sm btn-outline-info">Zobraziť</a>
 								<a n:href=":edit $pet->id" class="btn btn-sm btn-outline-success">Upraviť</a>
@@ -71,11 +75,13 @@
 					<tr>
 						<th>#</th>
 						<th>Meno</th>
+						<th>Obrázok</th>
 						<th></th>
 					</tr>
 						<tr n:foreach="$soldPets as $pet">
 							<td>{$pet->id}</td>
 							<td>{$pet->name}</td>
+							<td>{$pet->image ? Áno : Nie}</td>
 							<td>
 								<a n:href=":show $pet->id" class="btn btn-sm btn-outline-info">Zobraziť</a>
 								<a n:href=":edit $pet->id" class="btn btn-sm btn-outline-success">Upraviť</a>
