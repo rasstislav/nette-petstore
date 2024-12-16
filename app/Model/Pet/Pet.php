@@ -24,7 +24,6 @@ class Pet extends BasicEntity implements Entity
 	#[Groups(['api:input', 'api:output'])]
 	public ?Category $category = null;
 
-	// TODO:
 	#[Groups(['api:input', 'api:output'])]
 	public ?string $image = null;
 
@@ -36,5 +35,10 @@ class Pet extends BasicEntity implements Entity
 	public function getPrimaryKey(): ?int
 	{
 		return $this->id;
+	}
+
+	public function getStatusTitle(): ?string
+	{
+		return PetStatusEnum::TITLES[$this->status] ?? null;
 	}
 }

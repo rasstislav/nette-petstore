@@ -38,6 +38,10 @@ class Bootstrap
 		$this->configurator->createRobotLoader()
 			->addDirectory(__DIR__)
 			->register();
+
+		$this->configurator->addDynamicParameters([
+			'serverBaseUri' => $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_ADDR'].':'.$_SERVER['SERVER_PORT'],
+		]);
 	}
 
 

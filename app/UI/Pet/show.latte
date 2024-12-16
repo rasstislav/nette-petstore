@@ -1,0 +1,24 @@
+{block content}
+	<h2 n:block="title">Detail zvieratka</h2>
+	<p><a n:href=":">← spät na správu zvieratiek</a></p>
+
+	<h3>{$pet->name}</h3>
+
+	<table>
+		<tr>
+			<th>ID</th>
+			<td>{$pet->id}</td>
+		</tr>
+		<tr>
+			<th>Kategória</th>
+			<td>{$pet->category?->name ?: '-'}</td>
+		</tr>
+		<tr>
+			<th>Stav</th>
+			<td>{$pet->getStatusTitle()}</td>
+		</tr>
+	</table>
+
+	<a n:href=":edit $pet->id">Upraviť</a>
+	<a n:href=":delete $pet->id">Vymazať</a>
+{/block}

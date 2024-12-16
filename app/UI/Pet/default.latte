@@ -1,0 +1,63 @@
+{block content}
+	<h2 n:block="title">Správa zvieratiek</h2>
+	<p><a n:href="Home:">← spät na prehľad</a></p>
+
+	<a n:href=":create">Pridať</a>
+
+	<h3>Dostupné</h3>
+	<table>
+		<caption>Počet záznamov: {$availablePets|length}</caption>
+		<tr>
+			<th>#</th>
+			<th>Meno</th>
+			<th></th>
+		</tr>
+			<tr n:foreach="$availablePets as $pet">
+				<td>{$pet->id}</td>
+				<td>{$pet->name}</td>
+				<td>
+					<a n:href=":show $pet->id">Zobraziť</a>
+					<a n:href=":edit $pet->id">Upraviť</a>
+					<a n:href=":delete $pet->id">Vymazať</a>
+				</td>
+			</tr>
+	</table>
+
+	<h3>Čakajúce</h3>
+	<table>
+		<caption>Počet záznamov: {$pendingPets|length}</caption>
+		<tr>
+			<th>#</th>
+			<th>Meno</th>
+			<th></th>
+		</tr>
+			<tr n:foreach="$pendingPets as $pet">
+				<td>{$pet->id}</td>
+				<td>{$pet->name}</td>
+				<td>
+					<a n:href=":show $pet->id">Zobraziť</a>
+					<a n:href=":edit $pet->id">Upraviť</a>
+					<a n:href=":delete $pet->id">Vymazať</a>
+				</td>
+			</tr>
+	</table>
+
+	<h3>Predané</h3>
+	<table>
+		<caption>Počet záznamov: {$soldPets|length}</caption>
+		<tr>
+			<th>#</th>
+			<th>Meno</th>
+			<th></th>
+		</tr>
+			<tr n:foreach="$soldPets as $pet">
+				<td>{$pet->id}</td>
+				<td>{$pet->name}</td>
+				<td>
+					<a n:href=":show $pet->id">Zobraziť</a>
+					<a n:href=":edit $pet->id">Upraviť</a>
+					<a n:href=":delete $pet->id">Vymazať</a>
+				</td>
+			</tr>
+	</table>
+{/block}

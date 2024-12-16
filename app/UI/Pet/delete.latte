@@ -1,0 +1,24 @@
+{block content}
+	<h2 n:block="title">Vymazanie zvieratka</h2>
+	<p><a n:href=":show $pet->id">← spät na detail zvieratka</a></p>
+
+	<h3>Naozaj vymazať zvieratko?</h3>
+
+	<table>
+		<tr>
+			<th>ID</th>
+			<td>{$pet->id}</td>
+		</tr>
+		<tr>
+			<th>Meno</th>
+			<td>{$pet->name}</td>
+		</tr>
+		<tr>
+			<th>Stav</th>
+			<td>{$pet->getStatusTitle()}</td>
+		</tr>
+	</table>
+
+	<a n:href=":deleteConfirmation $pet->id">Áno</a>
+	<a n:href=":show $pet->id">Nie</a>
+{/block}

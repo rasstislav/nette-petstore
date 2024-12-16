@@ -8,6 +8,15 @@ services:
 			App\Codec\XmlDataCodec()
 		)
 	)
+	- App\Client\PetStoreApiClient(
+		Symfony\Component\HttpClient\HttpClient::create([
+			base_uri: '%serverBaseUri%/api/v1/'
+			headers: [
+				Content-Type: 'application/json'
+				Accept: 'application/json'
+			]
+		])
+	)
 
 	# Serializer
 	symfony.serializer.serializer:

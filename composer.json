@@ -22,6 +22,7 @@
 		"contributte/apitte": "dev-master",
 		"contributte/di": "^0.5.6",
 		"contributte/monolog": "^0.5.2",
+		"symfony/http-client": "^7.2",
 		"symfony/serializer-pack": "^1.3",
 		"symfony/validator": "^7.2"
 	},
