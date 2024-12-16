@@ -8,6 +8,7 @@ use App\Exception\ApiHttpError;
 use App\Model\Enum\Pet\PetStatusEnum;
 use App\Model\Pet\Pet;
 use App\Model\PetFacade;
+use App\Utils\Form as FormUtils;
 use Nette;
 use Nette\Application\Attributes\Persistent;
 use Nette\Application\UI\Form;
@@ -93,6 +94,10 @@ final class PetPresenter extends Nette\Application\UI\Presenter
 	protected function createComponentPetForm(): Form
 	{
 		$form = new Form();
+
+		$form->onRender[] = function ($form) {
+			FormUtils::makeBootstrap5($form);
+		};
 
 		if (!$this->getParameter('id')) {
 			$form->addInteger('id', 'ID:')

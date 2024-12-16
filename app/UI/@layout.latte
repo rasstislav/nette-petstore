@@ -3,19 +3,24 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-
 	<title>{ifset title}{include title|stripHtml} | {/ifset}Obchod so zvieratkami</title>
+	{block styles}
+		<link rel="stylesheet" media="screen" href="{$basePath}/css/bootstrap.min.css">
+	{/block}
 </head>
 
 <body>
-	<h1>Obchod so zvieratkami</h1>
+	<main class="container">
+		<h1>Obchod so zvieratkami</h1>
 
-	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+		<div n:foreach="$flashes as $flash" n:class="alert, $flash->type ? 'alert-'.$flash->type" role="alert">{$flash->message}</div>
 
-	{include content}
+		{include content}
+	</main>
 
 	{block scripts}
-	<script src="https://unpkg.com/nette-forms@3"></script>
+		<script src="https://unpkg.com/nette-forms@3"></script>
+		<script src="{$basePath}/js/bootstrap.min.js"></script>
 	{/block}
 </body>
 </html>

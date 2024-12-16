@@ -1,12 +1,20 @@
 {block content}
 	<h2>Prehľad zvieratiek</h2>
 
-	<p><strong>Aktuálny stav:</strong></p>
-	<ul>
-		<li>dostupné: {$availablePets|length}</li>
-		<li>čakajúce: {$pendingPets|length}</li>
-		<li>predané: {$soldPets|length}</li>
-	</ul>
+	<ol class="list-group list-group-horizontal mb-3">
+		<li class="list-group-item d-flex justify-content-between align-items-start">
+			<div class="fw-bold">Dostupné</div>
+			<span class="badge text-bg-primary rounded-pill ms-2">{$availablePets|length}</span>
+		</li>
+		<li class="list-group-item d-flex justify-content-between align-items-start">
+			<div class="fw-bold">Čakajúce</div>
+			<span class="badge text-bg-primary rounded-pill ms-2">{$pendingPets|length}</span>
+		</li>
+		<li class="list-group-item d-flex justify-content-between align-items-start">
+			<div class="fw-bold">Predané</div>
+			<span class="badge text-bg-primary rounded-pill ms-2">{$soldPets|length}</span>
+		</li>
+	</ol>
 
-	<a n:href="Pet:">Správa zvieratiek</a>
+	<a n:href="Pet:" class="btn btn-outline-primary">Správa zvieratiek</a>
 {/block}

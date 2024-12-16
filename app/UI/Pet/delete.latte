@@ -1,24 +1,26 @@
 {block content}
 	<h2 n:block="title">Vymazanie zvieratka</h2>
-	<p><a n:href=":show $pet->id">← spät na detail zvieratka</a></p>
+	<p><a n:href=":show $pet->id" class="btn btn-sm btn-link">← spät na detail zvieratka</a></p>
 
 	<h3>Naozaj vymazať zvieratko?</h3>
 
-	<table>
-		<tr>
-			<th>ID</th>
-			<td>{$pet->id}</td>
-		</tr>
-		<tr>
-			<th>Meno</th>
-			<td>{$pet->name}</td>
-		</tr>
-		<tr>
-			<th>Stav</th>
-			<td>{$pet->getStatusTitle()}</td>
-		</tr>
-	</table>
+	<div class="table-responsive">
+		<table class="table table-striped table-group-divider">
+			<tr>
+				<th>ID</th>
+				<td>{$pet->id}</td>
+			</tr>
+			<tr>
+				<th>Meno</th>
+				<td>{$pet->name}</td>
+			</tr>
+			<tr>
+				<th>Stav</th>
+				<td>{$pet->getStatusTitle()}</td>
+			</tr>
+		</table>
+	</div>
 
-	<a n:href=":deleteConfirmation $pet->id">Áno</a>
-	<a n:href=":show $pet->id">Nie</a>
+	<a n:href=":deleteConfirmation $pet->id" class="btn btn-outline-danger">Áno</a>
+	<a n:href=":show $pet->id" class="btn btn-outline-dark">Nie</a>
 {/block}

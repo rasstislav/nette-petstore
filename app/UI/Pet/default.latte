@@ -1,63 +1,89 @@
 {block content}
 	<h2 n:block="title">Správa zvieratiek</h2>
-	<p><a n:href="Home:">← spät na prehľad</a></p>
+	<p><a n:href="Home:" class="btn btn-sm btn-link">← spät na prehľad</a></p>
 
-	<a n:href=":create">Pridať</a>
+	<a n:href=":create" class="btn btn-outline-primary">Pridať</a>
 
-	<h3>Dostupné</h3>
-	<table>
-		<caption>Počet záznamov: {$availablePets|length}</caption>
-		<tr>
-			<th>#</th>
-			<th>Meno</th>
-			<th></th>
-		</tr>
-			<tr n:foreach="$availablePets as $pet">
-				<td>{$pet->id}</td>
-				<td>{$pet->name}</td>
-				<td>
-					<a n:href=":show $pet->id">Zobraziť</a>
-					<a n:href=":edit $pet->id">Upraviť</a>
-					<a n:href=":delete $pet->id">Vymazať</a>
-				</td>
-			</tr>
-	</table>
-
-	<h3>Čakajúce</h3>
-	<table>
-		<caption>Počet záznamov: {$pendingPets|length}</caption>
-		<tr>
-			<th>#</th>
-			<th>Meno</th>
-			<th></th>
-		</tr>
-			<tr n:foreach="$pendingPets as $pet">
-				<td>{$pet->id}</td>
-				<td>{$pet->name}</td>
-				<td>
-					<a n:href=":show $pet->id">Zobraziť</a>
-					<a n:href=":edit $pet->id">Upraviť</a>
-					<a n:href=":delete $pet->id">Vymazať</a>
-				</td>
-			</tr>
-	</table>
-
-	<h3>Predané</h3>
-	<table>
-		<caption>Počet záznamov: {$soldPets|length}</caption>
-		<tr>
-			<th>#</th>
-			<th>Meno</th>
-			<th></th>
-		</tr>
-			<tr n:foreach="$soldPets as $pet">
-				<td>{$pet->id}</td>
-				<td>{$pet->name}</td>
-				<td>
-					<a n:href=":show $pet->id">Zobraziť</a>
-					<a n:href=":edit $pet->id">Upraviť</a>
-					<a n:href=":delete $pet->id">Vymazať</a>
-				</td>
-			</tr>
-	</table>
+	<ul class="nav nav-underline mt-3" id="petsTab" role="tablist">
+		<li class="nav-item" role="presentation">
+			<button class="nav-link active" id="available-tab" data-bs-toggle="tab" data-bs-target="#available-tab-pane" type="button" role="tab" aria-controls="available-tab-pane" aria-selected="true">
+				Dostupné<span class="badge text-bg-primary rounded-pill ms-2">{$availablePets|length}</span>
+			</button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button class="nav-link" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending-tab-pane" type="button" role="tab" aria-controls="pending-tab-pane" aria-selected="false">
+				Čakajúce<span class="badge text-bg-primary rounded-pill ms-2">{$pendingPets|length}</span>
+			</button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button class="nav-link" id="sold-tab" data-bs-toggle="tab" data-bs-target="#sold-tab-pane" type="button" role="tab" aria-controls="sold-tab-pane" aria-selected="false">
+				Predané<span class="badge text-bg-primary rounded-pill ms-2">{$soldPets|length}</span>
+			</button>
+		</li>
+	</ul>
+	<div class="tab-content" id="petsTabContent">
+		<div class="tab-pane fade show active" id="available-tab-pane" role="tabpanel" aria-labelledby="available-tab" tabindex="0">
+			<div class="table-responsive mt-3">
+				<table class="table table-striped table-group-divider">
+					<caption>Počet záznamov: {$availablePets|length}</caption>
+					<tr>
+						<th>#</th>
+						<th>Meno</th>
+						<th></th>
+					</tr>
+						<tr n:foreach="$availablePets as $pet">
+							<td>{$pet->id}</td>
+							<td>{$pet->name}</td>
+							<td>
+								<a n:href=":show $pet->id" class="btn btn-sm btn-outline-info">Zobraziť</a>
+								<a n:href=":edit $pet->id" class="btn btn-sm btn-outline-success">Upraviť</a>
+								<a n:href=":delete $pet->id" class="btn btn-sm btn-outline-danger">Vymazať</a>
+							</td>
+						</tr>
+				</table>
+			</div>
+		</div>
+		<div class="tab-pane fade" id="pending-tab-pane" role="tabpanel" aria-labelledby="pending-tab" tabindex="0">
+			<div class="table-responsive mt-3">
+				<table class="table table-striped table-group-divider">
+					<caption>Počet záznamov: {$pendingPets|length}</caption>
+					<tr>
+						<th>#</th>
+						<th>Meno</th>
+						<th></th>
+					</tr>
+						<tr n:foreach="$pendingPets as $pet">
+							<td>{$pet->id}</td>
+							<td>{$pet->name}</td>
+							<td>
+								<a n:href=":show $pet->id" class="btn btn-sm btn-outline-info">Zobraziť</a>
+								<a n:href=":edit $pet->id" class="btn btn-sm btn-outline-success">Upraviť</a>
+								<a n:href=":delete $pet->id" class="btn btn-sm btn-outline-danger">Vymazať</a>
+							</td>
+						</tr>
+				</table>
+			</div>
+		</div>
+		<div class="tab-pane fade" id="sold-tab-pane" role="tabpanel" aria-labelledby="sold-tab" tabindex="0">
+			<div class="table-responsive mt-3">
+				<table class="table table-striped table-group-divider">
+					<caption>Počet záznamov: {$soldPets|length}</caption>
+					<tr>
+						<th>#</th>
+						<th>Meno</th>
+						<th></th>
+					</tr>
+						<tr n:foreach="$soldPets as $pet">
+							<td>{$pet->id}</td>
+							<td>{$pet->name}</td>
+							<td>
+								<a n:href=":show $pet->id" class="btn btn-sm btn-outline-info">Zobraziť</a>
+								<a n:href=":edit $pet->id" class="btn btn-sm btn-outline-success">Upraviť</a>
+								<a n:href=":delete $pet->id" class="btn btn-sm btn-outline-danger">Vymazať</a>
+							</td>
+						</tr>
+				</table>
+			</div>
+		</div>
+	</div>
 {/block}
