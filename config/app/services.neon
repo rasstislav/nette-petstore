@@ -10,7 +10,7 @@ services:
 	)
 	- App\Client\PetStoreApiClient(
 		Symfony\Component\HttpClient\HttpClient::create([
-			base_uri: '%serverBaseUri%/api/v1/'
+			base_uri: %env.API_BASE_URI%
 			headers: [
 				Content-Type: 'application/json'
 				Accept: 'application/json'

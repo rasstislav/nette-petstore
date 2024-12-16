@@ -6,7 +6,7 @@ namespace App;
 
 use Nette;
 use Nette\Bootstrap\Configurator;
-
+use Symfony\Component\Dotenv\Dotenv;
 
 class Bootstrap
 {
@@ -32,7 +32,19 @@ class Bootstrap
 
 	public function initializeEnvironment(): void
 	{
-		//$this->configurator->setDebugMode('secret@23.75.345.200'); // enable for your remote IP
+		$dotenv = new Dotenv();
+		$dotenv->loadEnv(dirname(__DIR__).'/.env');
+
+		if ($debugMode = $_ENV['APP_DEBUG_MODE'] ?? null) {
+			if ($debugMode === 'false' || $debugMode === '0') {
+				$debugMode = false;
+			} elseif ($debugMode === 'true' || $debugMode === '1') {
+				$debugMode = true;
+			}
+
+			$this->configurator->setDebugMode($debugMode);
+		}
+
 		$this->configurator->enableTracy($this->rootDir . '/log');
 
 		$this->configurator->createRobotLoader()
@@ -40,7 +52,7 @@ class Bootstrap
 			->register();
 
 		$this->configurator->addDynamicParameters([
-			'serverBaseUri' => $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_ADDR'].':'.$_SERVER['SERVER_PORT'],
+			'env' => $_ENV,
 		]);
 	}
 
